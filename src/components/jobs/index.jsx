@@ -44,7 +44,7 @@ const Jobs = () => {
   const getJobData = async () => {
     try {
       const res = await fetchDataFromApi(
-        "https://rm.dtu.ac.in/api/company/jobPost?page=1"
+        "https://dtu-rm-backend.vercel.app/api/data"
       );
       setJobs(res.data);
     } catch (error) {
