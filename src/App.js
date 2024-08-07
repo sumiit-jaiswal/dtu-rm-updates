@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './app.scss';
 
 import Header from './components/header';
-import Jobs from './components/Jobs';
+import Jobs from './components/jobs';
 import Notification from './components/Notification';
 import Floating from './components/Floating';
 
