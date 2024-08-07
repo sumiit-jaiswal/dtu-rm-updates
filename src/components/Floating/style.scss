@@ -1,0 +1,39 @@
+.floating-buttons {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .floating-button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.3s ease;
+        font-size: 16px;
+        text-decoration: none;
+        text-align: center;
+
+        &.link-button {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        &.scroll-button {
+            font-size: 24px;
+        }
+
+        &:hover {
+            background-color: #0056b3;
+        }
+    }
+}

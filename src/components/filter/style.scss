@@ -1,0 +1,51 @@
+.filter {
+    width: 300px;
+    position: relative;
+
+    @media (max-width:768px) {
+        width: 100%;
+        margin: 0;
+    }
+
+
+    .nav-bar {
+        background-color: aliceblue;
+        padding: 20px;
+        margin: 20px 10px;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        @media (max-width:768px) {
+            flex-direction: row;
+            height: 75px;
+            padding: 2px;
+            margin: 0;
+            justify-content: space-evenly;
+        }
+
+        .heading {
+            font-size: 20px;
+            font-weight: bold;
+            margin-right: 10px;
+            // border-bottom: 1px solid #ccc;
+        }
+
+        .drop-down {
+
+            margin-top: 20px;
+
+            @media (max-width:768px) {
+                margin: 0 2px;
+            }
+
+            .filter-values {
+                font-size: 16px;
+                // padding: 2px;
+                text-align: center;
+            }
+        }
+    }
+}

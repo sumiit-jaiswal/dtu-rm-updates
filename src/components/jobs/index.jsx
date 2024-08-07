@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./style.scss";
 import { fetchDataFromApi } from "../../api/api";
-import Header from "../header";
+import Filter from "../filter";
 
 const formatDate = (dateString) => {
   const options = {
@@ -36,6 +36,8 @@ const branchMapping = {
 const Jobs = () => {
   const [jobs, setJobs] = useState([]);
   const [selectedBranch, setSelectedBranch] = useState("");
+  const [selectedCgpa, setSelectedCgpa] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     getJobData();
@@ -44,11 +46,13 @@ const Jobs = () => {
   const getJobData = async () => {
     try {
       const res = await fetchDataFromApi(
-        "https://dtu-rm-backend.vercel.app/api/data"
+        "https://dtu-rm-backend.vercel.app/api/jobdata"
       );
       setJobs(res.data);
     } catch (error) {
       console.error("Error fetching job data:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -56,63 +60,79 @@ const Jobs = () => {
     setSelectedBranch(event.target.value);
   };
 
-  const filteredJobs = selectedBranch
-    ? jobs.filter((job) => job.btechBranches.includes(parseInt(selectedBranch)))
-    : jobs; // If no branch is selected, show all jobs
+  const handleCgpaChange = (event) => {
+    setSelectedCgpa(event.target.value);
+  };
+
+  const filteredJobs = jobs.filter((job) => {
+    const branchMatch = selectedBranch
+      ? job.btechBranches.includes(parseInt(selectedBranch))
+      : true;
+    const cgpaMatch = selectedCgpa
+      ? job.btechCutoff <= parseInt(selectedCgpa)
+      : true;
+    return branchMatch && cgpaMatch;
+  });
 
   return (
-    <div>
-      <Header
-        onBranchChange={handleBranchChange}
-        branchMapping={branchMapping}
-      />
+    <div className="main-container">
+      {!loading && (
+        <div className="filters">
+          <Filter
+            onBranchChange={handleBranchChange}
+            onCgpaChange={handleCgpaChange}
+            branchMapping={branchMapping}
+          />
+        </div>
+      )}
       <div className="job-container">
-        {filteredJobs.map((job, index) => (
-          <div className="jobs" key={index}>
-            <div className="heading">
-              <h1>{job.company.name}</h1>
-              <h3>{job.name}</h3>
-            </div>
-            <div className="desc">
-              <p className="desc-details red">
-                Deadline: {formatDate(job.applicationClosed)}
-              </p>
-              <p className="desc-details">
-                Posted on: {formatDate(job.applicationOpen)}
-              </p>
-              <p className="desc-details">
-                CTC: {job.ctc} {job.ctc < 100 ? "LPA" : " "}
-              </p>
-              <p className="desc-details">Cutoff: {job.btechCutoff}</p>
-              <p className="desc-details">
-                Job Description:{" "}
-                <a
-                  href={job.jobDescription}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  link
-                </a>
-              </p>
-              <div className="branches-allowed">
-                <div>Branches Allowed :</div>
-                <div className="drop-down">
-                  <select
-                    name="branch"
-                    id="branch-allowed"
-                    className="filter-branch"
+        {loading ? (
+          <div className="loading">
+            <div className="spinner"></div>
+          </div>
+        ) : (
+          filteredJobs.map((job, index) => (
+            <div className="jobs" key={index}>
+              <div className="heading">
+                <h1>{job.company.name}</h1>
+                <h3>{job.name}</h3>
+              </div>
+              <div className="desc">
+                <p className="desc-details red">
+                  Deadline: {formatDate(job.applicationClosed)}
+                </p>
+                <p className="desc-details">
+                  Posted on: {formatDate(job.applicationOpen)}
+                </p>
+                <p className="desc-details">
+                  CTC: {job.ctc} {job.ctc < 100 ? "LPA" : " "}
+                </p>
+                <p className="desc-details">Cutoff: {job.btechCutoff}</p>
+                <p className="desc-details">
+                  Job Description:{" "}
+                  <a
+                    href={job.jobDescription}
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
-                    {job.btechBranches.map((branchId) => (
-                      <option key={branchId} value={branchId}>
+                    link
+                  </a>
+                </p>
+                <div className="branches-allowed">
+                  <div>Btech Branches Allowed : </div>
+                  <div className="branches">
+                    {job.btechBranches.map((branchId, branchIndex) => (
+                      <span key={branchId}>
                         {branchMapping[branchId]}
-                      </option>
+                        {branchIndex < job.btechBranches.length - 1 && ", "}
+                      </span>
                     ))}
-                  </select>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );

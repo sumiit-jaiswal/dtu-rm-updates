@@ -1,17 +1,26 @@
-import React from 'react'
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import './app.scss';
 
-import "./app.scss";
-
-import Jobs from './components/jobs';
+import Header from './components/header';
+import Jobs from './components/Jobs';
+import Notification from './components/Notification';
+import Floating from './components/Floating';
 
 const App = () => {
   return (
-    <div>
+    <Router>
+      <Header />
+      <main>
+        <Routes>
+          <Route path="/jobs" element={<Jobs />} />
+          <Route path="/notifications" element={<Notification />} />
+          <Route path="/" element={<Jobs />} /> Default route
+        </Routes>
+      </main>
+      <Floating />
+    </Router>
+  );
+};
 
-      <Jobs />
-
-    </div>
-  )
-}
-
-export default App
+export default App;

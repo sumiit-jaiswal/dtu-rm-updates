@@ -1,29 +1,35 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./style.scss";
 
-// Default empty mapping to prevent errors
-const defaultBranchMapping = {};
+const Header = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
 
-const Header = ({ onBranchChange, branchMapping = defaultBranchMapping }) => {
   return (
     <div className="header">
-      <div className="nav-bar">
-        <p className="heading">Filter by:</p>
-        <div className="drop-down">
-          <select
-            name="branch"
-            id="branch"
-            className="filter-branch"
-            onChange={onBranchChange}
-          >
-            <option value="">---choose Your branch---</option>
-            {Object.entries(branchMapping).map(([key, value]) => (
-              <option key={key} value={key}>
-                {value}
-              </option>
-            ))}
-          </select>
-        </div>
+      <div
+        onClick={() => {
+          navigate("/jobs");
+        }}
+        className={`header-left ${
+          location.pathname === "/jobs" || location.pathname === "/"
+            ? "active"
+            : ""
+        }`}
+      >
+        Jobs
+      </div>
+      <div
+        onClick={() => {
+          navigate("/notifications");
+        }}
+        className={`header-right ${
+          location.pathname === "/notifications" ? "active" : ""
+        }`}
+      >
+        Notifications
       </div>
     </div>
   );
