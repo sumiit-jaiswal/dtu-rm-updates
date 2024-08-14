@@ -33,6 +33,17 @@ const branchMapping = {
   14: "SE",
 };
 
+const isExpired = (deadline) => {
+  return new Date(deadline) < new Date();
+};
+
+const isNearbyDeadline = (deadline) => {
+  const currentTime = new Date();
+  const deadlineTime = new Date(deadline);
+  const timeDifference = deadlineTime - currentTime;
+  return timeDifference > 0 && timeDifference <= 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+};
+
 const Jobs = () => {
   const [jobs, setJobs] = useState([]);
   const [selectedBranch, setSelectedBranch] = useState("");
@@ -91,47 +102,60 @@ const Jobs = () => {
             <div className="spinner"></div>
           </div>
         ) : (
-          filteredJobs.map((job, index) => (
-            <div className="jobs" key={index}>
-              <div className="heading">
-                <h1>{job.company.name}</h1>
-                <h3>{job.name}</h3>
-              </div>
-              <div className="desc">
-                <p className="desc-details red">
-                  Deadline: {formatDate(job.applicationClosed)}
-                </p>
-                <p className="desc-details">
-                  Posted on: {formatDate(job.applicationOpen)}
-                </p>
-                <p className="desc-details">
-                  CTC: {job.ctc} {job.ctc < 100 ? "LPA" : " "}
-                </p>
-                <p className="desc-details">Cutoff: {job.btechCutoff}</p>
-                <p className="desc-details">
-                  Job Description:{" "}
-                  <a
-                    href={job.jobDescription}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    link
-                  </a>
-                </p>
-                <div className="branches-allowed">
-                  <div>Btech Branches Allowed : </div>
-                  <div className="branches">
-                    {job.btechBranches.map((branchId, branchIndex) => (
-                      <span key={branchId}>
-                        {branchMapping[branchId]}
-                        {branchIndex < job.btechBranches.length - 1 && ", "}
-                      </span>
-                    ))}
+          filteredJobs.map((job, index) => {
+            const deadlineClass = isExpired(job.applicationClosed)
+              ? "expired-jobs"
+              : isNearbyDeadline(job.applicationClosed)
+              ? "nearby-deadline-jobs"
+              : "active-jobs";
+
+            return (
+              <div className={`jobs ${deadlineClass}`} key={index}>
+                <div className="heading">
+                  <h1>{job.company.name}</h1>
+                  <h3>{job.name}</h3>
+                </div>
+                <div className="desc">
+                  <p className="desc-details red">
+                    Deadline: {formatDate(job.applicationClosed)}
+                    {isExpired(job.applicationClosed)
+                      ? " ( Expired )"
+                      : isNearbyDeadline(job.applicationClosed)
+                      ? " ( Jaldi bhar de )"
+                      : ""}
+                  </p>
+                  <p className="desc-details">
+                    Posted on: {formatDate(job.applicationOpen)}
+                  </p>
+                  <p className="desc-details">
+                    CTC: {job.ctc} {job.ctc < 100 ? "LPA" : " "}
+                  </p>
+                  <p className="desc-details">Cutoff: {job.btechCutoff}</p>
+                  <p className="desc-details">
+                    Job Description:{" "}
+                    <a
+                      href={job.jobDescription}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      link
+                    </a>
+                  </p>
+                  <div className="branches-allowed">
+                    <div>Btech Branches Allowed : </div>
+                    <div className="branches">
+                      {job.btechBranches.map((branchId, branchIndex) => (
+                        <span key={branchId}>
+                          {branchMapping[branchId]}
+                          {branchIndex < job.btechBranches.length - 1 && ", "}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))
+            );
+          })
         )}
       </div>
     </div>
