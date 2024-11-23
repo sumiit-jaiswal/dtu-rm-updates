@@ -49,6 +49,14 @@ const Filter = ({
           </select>
         </div>
       </div>
+      <div className="about">
+        <p>
+          Developed by: <span className="developer-name">wizardaddy</span>
+        </p>
+
+        <p>For any query or bug email me on:</p>
+        <p>iamwizardaddy@gmail.com</p>
+      </div>
     </div>
   );
 };
