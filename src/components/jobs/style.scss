@@ -17,6 +17,7 @@
         height: auto;
         max-height: 70vh;
         display: flex;
+        align-items: center;
         flex-direction: column;
         justify-content: flex-start;
         background-color: #ffffff;
@@ -25,6 +26,35 @@
         border-radius: 12px;
         margin: 15px;
         overflow-y: auto;
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px; /* Space between checkbox and content */
+          
+            input[type="checkbox"] {
+              margin-right: 10px; /* Space between checkbox and label */
+              cursor: pointer; /* Change cursor to pointer on hover */
+              transform: scale(1.5); /* Increase size by 1.5 times */
+            }
+          
+            label {
+              font-size: 16px; /* Set font size */
+              font-weight: bold;
+              cursor: pointer; /* Change cursor to pointer on hover */
+              color: #333; /* Default label color */
+              transition: color 0.3s ease; /* Smooth transition for text color */
+            }
+          
+            input[type="checkbox"]:checked + label {
+              color: #007bff; /* Change label color when checkbox is checked (active jobs) */
+            }
+          
+            input[type="checkbox"]:not(:checked) + label {
+              color: red; /* Change label color when checkbox is unchecked (show all jobs) */
+            }
+          }
+          
 
         @media (max-width: 768px) {
             position: static;
@@ -43,7 +73,8 @@
         }
 
         .expired-jobs {
-            background-color: #ffebee; /* Light red background */
+            color: #e8f5e9;
+            background-color: #f44336; /* Light red background */
             border-left: 4px solid #f44336; /* Darker red border */
             position: relative;
 
@@ -52,7 +83,7 @@
                 position: absolute;
                 top: 10px;
                 right: 10px;
-                background-color: #f44336;
+                background-color: #1c1919;
                 color: white;
                 padding: 3px 8px;
                 border-radius: 3px;
@@ -80,7 +111,7 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
             margin: 15px 0;
             border-radius: 15px;
-            background-color: #ffffff;
+            // background-color: #ffffff;
             transition: all 0.3s ease;
             overflow: hidden;
 
@@ -109,7 +140,7 @@
                 text-align: center;
                 margin-bottom: 20px;
                 font-weight: 600;
-                color: #2c3e50;
+                // color: #2c3e50;
                 position: relative;
 
                 &::after {
@@ -129,17 +160,17 @@
                     font-size: 16px;
                     font-weight: 400;
                     line-height: 28px;
-                    color: #34495e;
+                    // color: #34495e;
                 }
 
                 .red {
-                    color: #e74c3c;
+                    // color: #e74c3c;
                     font-weight: bold;
                     transition: color 0.3s ease;
 
-                    &:hover {
-                        color: #c0392b;
-                    }
+                    // &:hover {
+                    //     // color: #c0392b;
+                    // }
                 }
 
                 .branches-allowed {
@@ -151,7 +182,7 @@
                     div {
                         margin-right: 15px;
                         font-weight: bold;
-                        color: #2980b9;
+                        // color: #2980b9;
                     }
 
                     .branches {
@@ -164,11 +195,11 @@
                             background-color: rgba(52, 152, 219, 0.1);
                             border-radius: 15px;
                             font-size: 0.9em;
-                            color: #2c3e50;
+                            // color: #2c3e50;
                             transition: background-color 0.3s ease;
 
                             &:hover {
-                                background-color: rgba(52, 152, 219, 0.2);
+                                background-color: rgba(13, 14, 14, 0.2);
                             }
                         }
                     }

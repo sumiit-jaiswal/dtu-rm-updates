@@ -49,6 +49,7 @@ const Jobs = () => {
   const [selectedBranch, setSelectedBranch] = useState("");
   const [selectedCgpa, setSelectedCgpa] = useState("");
   const [loading, setLoading] = useState(true);
+  const [showActiveJobs, setShowActiveJobs] = useState(false);
 
   useEffect(() => {
     getJobData();
@@ -82,13 +83,28 @@ const Jobs = () => {
     const cgpaMatch = selectedCgpa
       ? job.btechCutoff <= parseInt(selectedCgpa)
       : true;
-    return branchMatch && cgpaMatch;
+    const activeJobsMatch = showActiveJobs
+      ? !isExpired(job.applicationClosed)
+      : true;
+    return branchMatch && cgpaMatch && activeJobsMatch;
   });
 
   return (
     <div className="main-container">
       {!loading && (
         <div className="filters">
+          <div className="checkbox-container">
+            <input
+              type="checkbox"
+              id="showActiveJobs"
+              checked={showActiveJobs}
+              onChange={() => setShowActiveJobs(!showActiveJobs)}
+            />
+            <label htmlFor="showActiveJobs">
+            Show Only Active Jobs
+            </label>
+          </div>
+
           <Filter
             onBranchChange={handleBranchChange}
             onCgpaChange={handleCgpaChange}
