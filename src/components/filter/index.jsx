@@ -71,7 +71,7 @@ const Filter = ({
             className="filter-values"
             onChange={onCgpaChange}
           >
-            <option value="">Cutoff (All)</option>
+            <option value="">Your CGPA (All)</option>
             <option value="9.5">9.5</option>
             <option value="9">9</option>
             <option value="8.5">8.5</option>
