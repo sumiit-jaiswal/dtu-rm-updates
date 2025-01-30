@@ -1,32 +1,69 @@
 import React from "react";
 import "./style.scss";
 
-const defaultBranchMapping = {};
-
 const Filter = ({
-  onBranchChange,
+  onBtechBranchChange,
+  onMtechBranchChange,
+  onCourseChange,
   onCgpaChange,
-  branchMapping = defaultBranchMapping,
+  btechBranchMapping = {},
+  mtechBranchMapping = {},
+  selectedCourse
 }) => {
   return (
     <div className="filter">
       <div className="nav-bar">
         <div className="heading">Filter by:</div>
+        
         <div className="drop-down">
           <select
-            name="branch"
-            id="branch"
+            name="course"
+            id="course"
             className="filter-values"
-            onChange={onBranchChange}
+            onChange={onCourseChange}
           >
-            <option value="">Branch (All)</option>
-            {Object.entries(branchMapping).map(([key, value]) => (
-              <option key={key} value={key}>
-                {value}
-              </option>
-            ))}
+            <option value="all">All Courses</option>
+            <option value="btech">BTech</option>
+            <option value="mtech">MTech</option>
           </select>
         </div>
+
+        {(selectedCourse === "all" || selectedCourse === "btech") && (
+          <div className="drop-down">
+            <select
+              name="btechBranch"
+              id="btechBranch"
+              className="filter-values"
+              onChange={onBtechBranchChange}
+            >
+              <option value="">BTech Branch (All)</option>
+              {Object.entries(btechBranchMapping).map(([key, value]) => (
+                <option key={key} value={key}>
+                  {value}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
+        {(selectedCourse === "all" || selectedCourse === "mtech") && (
+          <div className="drop-down">
+            <select
+              name="mtechBranch"
+              id="mtechBranch"
+              className="filter-values"
+              onChange={onMtechBranchChange}
+            >
+              <option value="">MTech Branch (All)</option>
+              {Object.entries(mtechBranchMapping).map(([key, value]) => (
+                <option key={key} value={key}>
+                  {value}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
         <div className="drop-down">
           <select
             name="cgpa"
@@ -36,8 +73,8 @@ const Filter = ({
           >
             <option value="">Cutoff (All)</option>
             <option value="9.5">9.5</option>
-            <option value="9"> 9</option>
-            <option value="8.5"> 8.5</option>
+            <option value="9">9</option>
+            <option value="8.5">8.5</option>
             <option value="8">8</option>
             <option value="7.5">7.5</option>
             <option value="7">7</option>
@@ -49,11 +86,11 @@ const Filter = ({
           </select>
         </div>
       </div>
+
       <div className="about">
         <p>
           Developed by: <span className="developer-name">wizardaddy</span>
         </p>
-
         <p>For any query or bug email me on:</p>
         <p>iamwizardaddy@gmail.com</p>
       </div>

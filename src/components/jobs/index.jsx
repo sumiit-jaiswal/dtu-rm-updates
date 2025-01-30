@@ -15,7 +15,7 @@ const formatDate = (dateString) => {
   return new Date(dateString).toLocaleString("en-GB", options);
 };
 
-const branchMapping = {
+const btechBranchMapping = {
   0: "AE",
   1: "BTE",
   2: "CHE",
@@ -33,6 +33,33 @@ const branchMapping = {
   14: "SE",
 };
 
+const mtechBranchMapping = {
+  0: "PTE",
+  1: "NST",
+  2: "BIO",
+  3: "GTE",
+  4: "HRE",
+  5: "STE",
+  6: "GINF",
+  7: "CSE",
+  8: "SWE",
+  9: "ITY",
+  10: "MOC",
+  11: "SPD",
+  12: "VLS",
+  13: "C&I",
+  14: "PSY",
+  15: "PES",
+  16: "ENE",
+  17: "PRD",
+  18: "THE",
+  19: "IBT",
+  20: "AFI",
+  21: "DSC",
+  22: "IEM",
+  23: "CAD",
+};
+
 const isExpired = (deadline) => {
   return new Date(deadline) < new Date();
 };
@@ -41,12 +68,14 @@ const isNearbyDeadline = (deadline) => {
   const currentTime = new Date();
   const deadlineTime = new Date(deadline);
   const timeDifference = deadlineTime - currentTime;
-  return timeDifference > 0 && timeDifference <= 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+  return timeDifference > 0 && timeDifference <= 24 * 60 * 60 * 1000;
 };
 
 const Jobs = () => {
   const [jobs, setJobs] = useState([]);
-  const [selectedBranch, setSelectedBranch] = useState("");
+  const [selectedBtechBranch, setSelectedBtechBranch] = useState("");
+  const [selectedMtechBranch, setSelectedMtechBranch] = useState("");
+  const [selectedCourse, setSelectedCourse] = useState("all");
   const [selectedCgpa, setSelectedCgpa] = useState("");
   const [loading, setLoading] = useState(true);
   const [showActiveJobs, setShowActiveJobs] = useState(false);
@@ -68,8 +97,20 @@ const Jobs = () => {
     }
   };
 
-  const handleBranchChange = (event) => {
-    setSelectedBranch(event.target.value);
+  const handleBtechBranchChange = (event) => {
+    setSelectedBtechBranch(event.target.value);
+    setSelectedMtechBranch("");
+  };
+
+  const handleMtechBranchChange = (event) => {
+    setSelectedMtechBranch(event.target.value);
+    setSelectedBtechBranch("");
+  };
+
+  const handleCourseChange = (event) => {
+    setSelectedCourse(event.target.value);
+    setSelectedBtechBranch("");
+    setSelectedMtechBranch("");
   };
 
   const handleCgpaChange = (event) => {
@@ -77,9 +118,19 @@ const Jobs = () => {
   };
 
   const filteredJobs = jobs.filter((job) => {
-    const branchMatch = selectedBranch
-      ? job.btechBranches.includes(parseInt(selectedBranch))
-      : true;
+    const branchMatch = (() => {
+      if (selectedCourse === "btech" || selectedBtechBranch) {
+        return selectedBtechBranch
+          ? job.btechBranches.includes(parseInt(selectedBtechBranch))
+          : true;
+      } else if (selectedCourse === "mtech" || selectedMtechBranch) {
+        return selectedMtechBranch
+          ? job.mtechBranches?.includes(parseInt(selectedMtechBranch))
+          : true;
+      }
+      return true;
+    })();
+
     const cgpaMatch = selectedCgpa
       ? job.btechCutoff <= parseInt(selectedCgpa)
       : true;
@@ -100,15 +151,17 @@ const Jobs = () => {
               checked={showActiveJobs}
               onChange={() => setShowActiveJobs(!showActiveJobs)}
             />
-            <label htmlFor="showActiveJobs">
-            Show Only Active Jobs
-            </label>
+            <label htmlFor="showActiveJobs">Show Only Active Jobs</label>
           </div>
 
           <Filter
-            onBranchChange={handleBranchChange}
+            onBtechBranchChange={handleBtechBranchChange}
+            onMtechBranchChange={handleMtechBranchChange}
+            onCourseChange={handleCourseChange}
             onCgpaChange={handleCgpaChange}
-            branchMapping={branchMapping}
+            btechBranchMapping={btechBranchMapping}
+            mtechBranchMapping={mtechBranchMapping}
+            selectedCourse={selectedCourse}
           />
         </div>
       )}
@@ -157,15 +210,32 @@ const Jobs = () => {
                       link
                     </a>
                   </p>
+                  {job.btechBranches && job.btechBranches.length > 0 && (
+                    <div className="branches-allowed">
+                      <div>BTech Branches Allowed : </div>
+                      <div className="branches">
+                        {job.btechBranches.map((branchId, branchIndex) => (
+                          <span key={branchId}>
+                            {btechBranchMapping[branchId]}
+                            {branchIndex < job.btechBranches.length - 1 && ", "}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                   <div className="branches-allowed">
-                    <div>Btech Branches Allowed : </div>
+                    <div>MTech Branches Allowed : </div>
                     <div className="branches">
-                      {job.btechBranches.map((branchId, branchIndex) => (
-                        <span key={branchId}>
-                          {branchMapping[branchId]}
-                          {branchIndex < job.btechBranches.length - 1 && ", "}
-                        </span>
-                      ))}
+                      {job.mtechBranches && job.mtechBranches.length > 0 ? (
+                        job.mtechBranches.map((branchId, branchIndex) => (
+                          <span key={branchId}>
+                            {mtechBranchMapping[branchId]}
+                            {branchIndex < job.mtechBranches.length - 1 && ", "}
+                          </span>
+                        ))
+                      ) : (
+                        <span>Not Allowed</span>
+                      )}
                     </div>
                   </div>
                 </div>
