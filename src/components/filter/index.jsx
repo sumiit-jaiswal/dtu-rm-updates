@@ -93,6 +93,7 @@ const Filter = ({
         </p>
         <p>For any query or bug email me on:</p>
         <p>iamwizardaddy@gmail.com</p>
+        <p>if anyone from 26 batch is interested to carry on this project can email me on above email address</p>
       </div>
     </div>
   );
